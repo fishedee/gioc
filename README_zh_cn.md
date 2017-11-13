@@ -4,7 +4,7 @@ gioc 是一个纯粹的golang类spring实现，实现spring中的IOC(控制依�
 
 # IOC
 
-```
+```go
 type User struct {
 	Id   int
 	Name string
@@ -21,7 +21,7 @@ type UserDb interface {
 
 定义两个bean的接口
 
-```
+```go
 type userDbImpl struct {
 }
 
@@ -43,7 +43,7 @@ func init() {
 
 使用gioc注册UserDb接口的实现，构造器的参数表明实现的依赖，返回值表明实现的输出
 
-```
+```go
 type userAoImpl struct {
 	userDb api.UserDb
 }
@@ -69,7 +69,7 @@ func init() {
 
 使用gioc注册UserAo接口的视线，构造器显示需要依赖UserDb接口才能构造输出
 
-```
+```go
 userAo := gioc.New((*api.UserAo)(nil), nil, nil).(api.UserAo)
 ```
 
@@ -77,7 +77,7 @@ userAo := gioc.New((*api.UserAo)(nil), nil, nil).(api.UserAo)
 
 # STUB
 
-```
+```go
 type UserDbStub struct {
 }
 
@@ -100,7 +100,7 @@ userAo := gioc.New((*api.UserAo)(nil), []interface{}{
 
 # AOP
 
-```
+```go
 type UserAo interface {
 	Get(id int) User
 	Add(data User) int
@@ -130,7 +130,7 @@ func init() {
 
 要实现gioc的AOP编程，需要用工具自动生成各个接口的Hook实现，以上是UserAo接口的通用Hook实现，然后用RegisterHook注入
 
-```
+```go
 func hookHandler(data interface{}) interface{} {
 	dataValue := reflect.ValueOf(data)
 	newValue := reflect.MakeFunc(dataValue.Type(), func(args []reflect.Value) []reflect.Value {
