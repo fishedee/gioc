@@ -155,5 +155,6 @@ userAo := gioc.New((*api.UserAo)(nil), nil, hook).(api.UserAo)
 * 多线程支持
 * Register时支持单例模式
 * Hook时用aspectJ的正则表达式，以及用完整的包名
-* 注入STUB的参数不太漂亮，
+* 注入STUB的参数不太漂亮
+* 自动化的mock和hook代码生成
 
