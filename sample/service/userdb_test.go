@@ -7,7 +7,7 @@ import (
 )
 
 func TestUserDb(t *testing.T) {
-	userDb := gioc.New((*api.UserDb)(nil), nil, nil).(api.UserDb)
+	userDb := gioc.New(api.UserDb{}, nil, nil).(api.UserDb)
 	id1 := userDb.Add(api.User{Name: "Fish"})
 	id2 := userDb.Add(api.User{Name: "Fish2"})
 	if id1 != 10001 ||

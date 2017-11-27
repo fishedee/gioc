@@ -25,8 +25,9 @@ func getRealType(t reflect.Type, hook map[string]interface{}, visit map[reflect.
 
 	info, isExist := myTypeBuilder[t]
 	if isExist == false {
-		panic("unknown type")
+		panic("unknown type"+t.String())
 	}
+
 	args := []reflect.Value{}
 	for _, singleDepType := range info.depType {
 		args = append(args, dfs(singleDepType, hook, visit, cache, myTypeBuilder))
@@ -93,9 +94,6 @@ func New(a interface{}, moc []interface{}, hook map[string]interface{}) interfac
 	visit := map[reflect.Type]bool{}
 	cache := map[reflect.Type]reflect.Value{}
 	targetType := reflect.ValueOf(a).Type()
-	if targetType.Elem().Kind() == reflect.Interface {
-		targetType = targetType.Elem()
-	}
 	return dfs(targetType, hook, visit, cache, myTypeBuilder).Interface()
 }
 

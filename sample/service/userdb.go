@@ -23,9 +23,12 @@ func (this *userDbImpl) Add(data api.User) int {
 }
 
 func newUserDbImpl(db util.Db) api.UserDb {
-	userDbImpl := &userDbImpl{}
-	userDbImpl.db = db
-	return userDbImpl
+	userDb := &userDbImpl{}
+	userDb.db = db
+	return api.UserDb{
+		Get:userDb.Get,
+		Add:userDb.Add,
+	}
 }
 
 func init() {

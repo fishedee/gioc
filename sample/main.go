@@ -100,7 +100,7 @@ func main() {
 		"UserAo.Get": hookHandler,
 		"UserAo.Add": hookHandler,
 	}
-	controller := gioc.New((*Controller)(nil), nil, hook).(*Controller)
+	controller := gioc.New(&Controller{}, nil, hook).(*Controller)
 
 	util.MyLog.Debug("Server is running...")
 	server := util.NewServer()

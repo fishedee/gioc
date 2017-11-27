@@ -23,7 +23,10 @@ func (this *userAoImpl) Add(data api.User) int {
 func newUserAoImpl(userDb api.UserDb) api.UserAo {
 	userAo := &userAoImpl{}
 	userAo.userDb = userDb
-	return userAo
+	return api.UserAo{
+		Get:userAo.Get,
+		Add:userAo.Add,
+	}
 }
 
 func init() {

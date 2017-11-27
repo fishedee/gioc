@@ -5,7 +5,7 @@ type User struct {
 	Name string
 }
 
-type UserDb interface {
-	Get(id int) User
-	Add(data User) int
+type UserDb struct {
+	Get func(id int) User
+	Add func(data User) int
 }

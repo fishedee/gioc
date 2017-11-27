@@ -18,9 +18,13 @@ func (this *UserDbStub) Add(data api.User) int {
 }
 
 func TestUserAoGet(t *testing.T) {
-	userAo := gioc.New((*api.UserAo)(nil), []interface{}{
+	userAo := gioc.New(api.UserAo{}, []interface{}{
 		func() api.UserDb {
-			return &UserDbStub{}
+			stub := &UserDbStub{}
+			return api.UserDb{
+				Get:stub.Get,
+				Add:stub.Add,
+			}
 		},
 	}, nil).(api.UserAo)
 	left := userAo.Get(0)
@@ -32,9 +36,13 @@ func TestUserAoGet(t *testing.T) {
 }
 
 func TestUserAoAdd(t *testing.T) {
-	userAo := gioc.New((*api.UserAo)(nil), []interface{}{
+	userAo := gioc.New(api.UserAo{}, []interface{}{
 		func() api.UserDb {
-			return &UserDbStub{}
+			stub := &UserDbStub{}
+			return api.UserDb{
+				Get:stub.Get,
+				Add:stub.Add,
+			}
 		},
 	}, nil).(api.UserAo)
 	left := userAo.Add(api.User{})
