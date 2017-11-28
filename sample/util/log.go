@@ -7,9 +7,9 @@ import (
 
 var MyLog Log
 
-type Log interface {
-	Debug(in string, args ...interface{})
-	Info(in string, args ...interface{})
+type Log struct {
+	Debug func(in string, args ...interface{})
+	Info  func(in string, args ...interface{})
 }
 
 type logImpl struct {
@@ -23,13 +23,15 @@ func (this *logImpl) Info(in string, args ...interface{}) {
 	fmt.Printf("[INFO] "+in+"\n", args...)
 }
 
-func newLog() Log {
+func newLog() *logImpl {
 	return &logImpl{}
 }
 
 func init() {
-	MyLog = newLog()
-	gioc.Register(func() Log {
-		return MyLog
+	MyLogImpl := newLog()
+	MyLog.Debug = MyLogImpl.Debug
+	MyLog.Info = MyLogImpl.Info
+	gioc.Register(&Log{}, func() *logImpl {
+		return MyLogImpl
 	})
 }

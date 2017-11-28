@@ -5,9 +5,9 @@ import (
 	"reflect"
 )
 
-type Db interface {
-	Insert(data interface{}) int
-	Select(id int) interface{}
+type Db struct {
+	Insert func(data interface{}) int
+	Select func(id int) interface{}
 }
 
 type dbImpl struct {
@@ -29,7 +29,7 @@ func (this *dbImpl) Insert(data interface{}) int {
 	return this.totalId
 }
 
-func newDb() Db {
+func newDb() *dbImpl {
 	dbImpl := &dbImpl{}
 	dbImpl.totalId = 10000
 	dbImpl.data = map[int]interface{}{}
@@ -37,5 +37,5 @@ func newDb() Db {
 }
 
 func init() {
-	gioc.Register(newDb)
+	gioc.Register(&Db{}, newDb)
 }

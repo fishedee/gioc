@@ -112,5 +112,5 @@ func main() {
 }
 
 func init() {
-	gioc.Register(NewController)
+	gioc.Register(&Controller{}, NewController)
 }

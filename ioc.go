@@ -6,7 +6,7 @@ import (
 
 type typeInfo struct {
 	depType []reflect.Type
-	builder reflect.Value
+	builder func([]reflect.Value) reflect.Value
 }
 
 var typeBuilder map[reflect.Type]typeInfo = map[reflect.Type]typeInfo{}
@@ -25,7 +25,7 @@ func getRealType(t reflect.Type, hook map[string]interface{}, visit map[reflect.
 
 	info, isExist := myTypeBuilder[t]
 	if isExist == false {
-		panic("unknown type"+t.String())
+		panic("unknown type" + t.String())
 	}
 
 	args := []reflect.Value{}
@@ -73,7 +73,8 @@ func dfs(t reflect.Type, hook map[string]interface{}, visit map[reflect.Type]boo
 	return hookResult
 }
 
-func New(a interface{}, moc []interface{}, hook map[string]interface{}) interface{} {
+func New(a interface{}, moc map[interface{}]interface{}, hook map[string]interface{}) interface{} {
+	return nil
 	myTypeBuilder := map[reflect.Type]typeInfo{}
 	for key, value := range typeBuilder {
 		myTypeBuilder[key] = value
@@ -97,7 +98,8 @@ func New(a interface{}, moc []interface{}, hook map[string]interface{}) interfac
 	return dfs(targetType, hook, visit, cache, myTypeBuilder).Interface()
 }
 
-func getRegisterInfo(createFun interface{}) (reflect.Type, typeInfo) {
+func getRegisterInfo(createType interface{}, createFun interface{}) (reflect.Type, typeInfo) {
+	buildType := reflect.TypeOf(createType)
 	typeValue := reflect.ValueOf(createFun)
 	typeType := typeValue.Type()
 	if typeType.Kind() != reflect.Func {
@@ -111,14 +113,21 @@ func getRegisterInfo(createFun interface{}) (reflect.Type, typeInfo) {
 		panic("invalid num out")
 	}
 	numOut := typeType.Out(0)
-	return numOut, typeInfo{
-		depType: numIn,
-		builder: typeValue,
+
+	if numOut == buildType {
+		return numOut, typeInfo{
+			depType: numIn,
+			builder: typeValue,
+		}
+	} else {
+		return buildType.Elem(), typeInfo{
+			depType: numIn,
+			builder: typeValue,
+		}
 	}
+
 }
-func Register(createFun interface{}) {
-	a, b := getRegisterInfo(createFun)
-	typeBuilder[a] = b
+func Register(createType interface{}, createFun interface{}) {
 }
 
 func RegisterHook(createFun interface{}) {

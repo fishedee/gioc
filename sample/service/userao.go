@@ -20,15 +20,12 @@ func (this *userAoImpl) Add(data api.User) int {
 	return this.userDb.Add(data)
 }
 
-func newUserAoImpl(userDb api.UserDb) api.UserAo {
+func newUserAoImpl(userDb api.UserDb) *userAoImpl {
 	userAo := &userAoImpl{}
 	userAo.userDb = userDb
-	return api.UserAo{
-		Get:userAo.Get,
-		Add:userAo.Add,
-	}
+	return userAo
 }
 
 func init() {
-	gioc.Register(newUserAoImpl)
+	gioc.Register(&api.UserAo{}, newUserAoImpl)
 }
